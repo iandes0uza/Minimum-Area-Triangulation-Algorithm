@@ -169,8 +169,14 @@ def buildTriangles( slice0, slice1 ):
     #
     # [1 mark] 
 
+    distance = distance(slice0.verts[0], slice1.verts[0])       # This block initializes the first
+    minDistance = [slice0.vert[0], slice1.vert[0], distance]    # minimum distance achievable
 
-    # [YOUR CODE HERE]
+    for point1 in slice0.verts:                         # This set of For loops find the lowest distance
+        for point2 in slice1.verts:                     # between any point and stores its info in the minDistance Array
+            distance = distance(point1, point2)
+            if (minDistance[2] > (distance)):
+                minDistance = [point1, point2, distance]
 
 
     # Make a cyclic permutation of the vertices of each slice,
@@ -181,9 +187,10 @@ def buildTriangles( slice0, slice1 ):
     #
     # [1 mark]
 
-
-    # [YOUR CODE HERE]
-
+    p0 = slice0.verts.index(minDistance[0])  #Index of slice 0 closest point
+    p1 = slice1.verts.index(minDistance[1])  #Index of slice 1 closest point
+    perm0 = slice0.verts[p0:] + slice0.verts[:p0] + [minDistance[0]]
+    perm1 = slice1.verts[p1:] + slice1.verts[:p1] + [minDistance[1]]
 
     # Set up the 'minArea' array.  The first dimension (rows) of the
     # array corresponds to vertices in slice1.  The second dimension

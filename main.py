@@ -95,7 +95,7 @@ class Slice(object):
     
     def draw(self):
 
-        glColor3f( 0, 0, 0 );
+        glColor3f( 0, 0, 0 )
 
         # Draw points
         
@@ -207,26 +207,36 @@ def buildTriangles( slice0, slice1 ):
     # [YOUR CODE HERE]
 
 
-    minArea = [[None]] # CHANGE THIS
-    minDir  = [[None]] # CHANGE THIS
+    minArea = [] # CHANGED THESE TO EMPTY LISTS
+    minDir  = [] 
 
-
+    for row in range(len(perm1)) #add the same number of rows as vertices in slice1
+        minArea.append([])
+        minDir.append([])
+        for y in range(len(perm0)) #for reach row add the same number of collumns as vertices in slice 0
+            minArea[row].append([])
+            minDir[row].append([])
     # Fill in the minArea array
 
     minArea[0][0] = 0 # Starting edge has zero area
+    minDir[0][0] = "-" # CHANGE THIS WHATTTTT IS SUPPOSED TO GO HERE
 
     # Fill in row 0 of minArea and minDir, since it's a special case as there's no row -1
     #
     # [2 marks]
 
-
+    for col in range(1, len(perm0)): #from 1 to the end of slice0
+        minArea[0][col] = minArea[0][col-1] + triangleArea(perm1[col-1].coords, perm0[0].coords, perm1[col].coords)
+        minDir[0][col] ="U" #NO IDEAAAAA
     # [YOUR CODE HERE]
 
 
     # Fill in col 0 of minArea and minDir, since it's a special case as there's no col -1
     #
     # [2 marks]
-    
+    for row in range(1, len(perm1)): #from 1 to the end of slice0
+        minArea[0][col] = minArea[0][row-1] + triangleArea(perm1[row-1].coords, perm1[0].coords, perm1[row].coords)
+        minDir[0][col] ="L" #NO IDEAAAAA
 
     # [YOUR CODE HERE]
 
@@ -234,10 +244,18 @@ def buildTriangles( slice0, slice1 ):
     # Fill in the remaining entries of minArea and minDir.  This is very similar to the above, but more general.
     #
     # [2 marks]
-
-
+    for col in range(1,len(perm0)):
+        for row in range(1, len(perm1)):
+           #calculate area
+            area1 = minArea[row][col-1] + triangleArea(erm0[col-1].coords, perm1[row].coords, perm0[col].coords)
+            area2 = minArea[row-1][col] + triangleArea(perm1[row-1].coords, perm0[col].coords, perm1[row].coords) 
     # [YOUR CODE HERE]
-
+        if area1<=area2
+            minArea[row][col] = area1
+            minDir[row][col] = "L" 
+        elif #area2<area1
+            minArea[row][col] = area2
+            minDir[row[col]] = "U"
 
     # It's useful for debugging at this point to print out the minArea
     # and minDir arrays together.  For example, print a table in which
@@ -285,11 +303,18 @@ def buildTriangles( slice0, slice1 ):
     # Continue going backward through the array until reaching [0][0].
     #
     # [3 marks]
-
-    triangles = []
-
-
     # [YOUR CODE HERE]
+    triangles = [] 
+    x = len(perm0)-1
+    y = len(perm1)-1
+    while x != 0 and y != 0:
+        if minDir[y][x] == "u": # minimum area came from upwards
+            triangles.append(Triangle([perm0[x],perm1[y],perm1[y-1]]))
+            y-=1
+        elif minDir[y][x] == "L":
+            triangles.append(Triangle([perm0[x],perm1[y],perm0[x-1]]))
+            x-=1
+   
 
 
     # Return a list of the triangles that you constructed
